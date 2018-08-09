@@ -1,6 +1,6 @@
 package com.example.geoquiz;
 
-import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +15,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mFalseButton;
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
+    private Button mCheatButton;
     private TextView mQuestionTextView;
 
 
@@ -35,6 +36,10 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        //load data during the activity creation:
+        if (savedInstanceState != null){
+            mCurrentIndex = savedInstanceState.getInt("index", 0);
+        }
         //get refernece for the TextView and set its text to the question at the current index
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
 
@@ -82,7 +87,28 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
+
+        //intent opens the new Activity CheatActivity.java:
+        mCheatButton = (Button) findViewById(R.id.cheat_button);
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QuizActivity.this, CheatActivity.class);
+                startActivity(intent);
+            }
+        });
+
         updateQuestion();
+
+
+    }
+
+
+//this methode saves the current index as Key-Value-pair: Index = mCurrentIndex/ We override the existing onSaveInstanceState methode to save additional data
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("index", mCurrentIndex);
     }
 
     private void updateQuestion() {
